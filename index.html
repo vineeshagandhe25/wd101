@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<form>
+   <label for="name">Name</label>
+   <input required type="text" id="name" name="name">
+    <br>
+   <label for="email">Email</label>
+   <input required type="email" id="email" name="email">
+    <br>
+   <label for="password">Password</label>
+   <input required type="password" id="password" name="password">
+    <br>
+   <label for="dob">Date of Birth</label>
+   <input required type="date" id="dob" name="dob">
+   <br>
+   <input type="checkbox" id="acceptTerms" name="acceptTerms">
+   <label required for="acceptTerms">Accept Terms & Conditions</label>
+   <br>
+   <button type="submit" onclick="validateDOB()" >Submit</button>
+<br>
+</form>
+<h2>Saved Data Table</h2>
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>DOB</th>
+      </tr>
+    </thead>
+    <tbody id="dataBody"></tbody>
+  </table>
+
+ <script>
+    function validateDOB() {
+      var dobInput = document.getElementById('dob');
+      var selectedDate = new Date(dobInput.value);
+      var currentDate = new Date();
+      var minDate = new Date();
+      minDate.setFullYear(currentDate.getFullYear() - 55);
+      var maxDate = new Date();
+      maxDate.setFullYear(currentDate.getFullYear() - 18);
+
+      if (selectedDate >= minDate && selectedDate <= maxDate) {
+        alert('Valid date of birth!');
+        // Proceed with form submission or other actions
+      } else {
+        alert('Please enter a date of birth between ages 18 and 55.');
+        // Prevent form submission or take corrective actions
+      }
+      saveData();
+    }
+    function saveData() {
+      var formData = {
+        name: document.getElementById('name').value,
+        dod: document.getElementById('dob').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      };
+      localStorage.setItem('userData', JSON.stringify(formData));
+      alert('Data saved successfully!');
+      loadData() ;
+
+    }
+    function loadData() {
+      var savedData = localStorage.getItem('userData');
+
+      if (savedData) {
+        var parsedData = JSON.parse(savedData);
+        displayDataInTable(parsedData);
+        alert('Data loaded successfully!');
+      } else {
+        alert('No saved data found.');
+      }
+    }
+    function displayDataInTable(data) {
+      var tableBody = document.getElementById('dataBody');
+      var newRow = tableBody.insertRow();
+
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3);
+
+      cell1.innerHTML = data.name;
+      cell2.innerHTML = data.email;
+      cell3.innerHTML = data.password;
+      cell4.innerHTML = data.dob;
+    }
+  </script>
+
+</body>
+</html>
+
+
