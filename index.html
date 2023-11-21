@@ -1,102 +1,81 @@
-<!DOCTYPE html>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
 </head>
 <body>
-<form>
-   <label for="name">Name</label>
-   <input required type="text" id="name" name="name">
+
+  <h2>Registration Form</h2>
+
+  <form id="registrationForm" onsubmit="submitForm(); return false;">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
     <br>
-   <label for="email">Email</label>
-   <input required type="email" id="email" name="email">
+    <label for="email">Email:</label>
+    <input type="email" id="email" required>
     <br>
-   <label for="password">Password</label>
-   <input required type="password" id="password" name="password">
-    <br>
-   <label for="dob">Date of Birth</label>
-   <input required type="date" id="dob" name="dob">
-   <br>
-   <input type="checkbox" id="acceptTerms" name="acceptTerms">
-   <label required for="acceptTerms">Accept Terms & Conditions</label>
-   <br>
-   <button type="submit" onclick="validateDOB()" >Submit</button>
-<br>
-</form>
-<h2>Saved Data Table</h2>
-  <table id="dataTable">
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+     <br>
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" required>
+     <br>
+    <label for="terms">Accepted terms?</label>
+    <input type="checkbox" id="terms" required>
+      <br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2>Entries</h2>
+
+  <table border="1" id="entriesTable">
     <thead>
       <tr>
         <th>Name</th>
         <th>Email</th>
         <th>Password</th>
-        <th>DOB</th>
+        <th>Date of Birth</th>
+        <th>Accepted terms?</th>
       </tr>
     </thead>
-    <tbody id="dataBody"></tbody>
+    <tbody id="entriesBody"></tbody>
   </table>
 
- <script>
-    function validateDOB() {
-      var dobInput = document.getElementById('dob');
-      var selectedDate = new Date(dobInput.value);
-      var currentDate = new Date();
-      var minDate = new Date();
-      minDate.setFullYear(currentDate.getFullYear() - 55);
-      var maxDate = new Date();
-      maxDate.setFullYear(currentDate.getFullYear() - 18);
+  <script>
+    function submitForm() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const dob = document.getElementById('dob').value;
+      const terms = document.getElementById('terms').checked;
 
-      if (selectedDate >= minDate && selectedDate <= maxDate) {
-        alert('Valid date of birth!');
-        // Proceed with form submission or other actions
-      } else {
-        alert('Please enter a date of birth between ages 18 and 55.');
-        // Prevent form submission or take corrective actions
+      // Validate age between 18 and 55
+      const userDob = new Date(dob);
+      const today = new Date();
+      const age = today.getFullYear() - userDob.getFullYear();
+      if (age < 18 || age > 55) {
+        alert('Age must be between 18 and 55 years old.');
+        return;
       }
-      saveData();
-    }
-    function saveData() {
-      var formData = {
-        name: document.getElementById('name').value,
-        dod: document.getElementById('dob').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
-      };
-      localStorage.setItem('userData', JSON.stringify(formData));
-      alert('Data saved successfully!');
-      loadData() ;
 
-    }
-    function loadData() {
-      var savedData = localStorage.getItem('userData');
+      // Add entry to table
+      const table = document.getElementById('entriesTable');
+      const tbody = document.getElementById('entriesBody');
+      const newRow = tbody.insertRow();
+      newRow.insertCell().textContent = name;
+      newRow.insertCell().textContent = email;
+      newRow.insertCell().textContent = password;
+      newRow.insertCell().textContent = dob;
+      newRow.insertCell().textContent = terms ? 'Yes' : 'No';
 
-      if (savedData) {
-        var parsedData = JSON.parse(savedData);
-        displayDataInTable(parsedData);
-        alert('Data loaded successfully!');
-      } else {
-        alert('No saved data found.');
-      }
-    }
-    function displayDataInTable(data) {
-      var tableBody = document.getElementById('dataBody');
-      var newRow = tableBody.insertRow();
-
-      var cell1 = newRow.insertCell(0);
-      var cell2 = newRow.insertCell(1);
-      var cell3 = newRow.insertCell(2);
-      var cell4 = newRow.insertCell(3);
-
-      cell1.innerHTML = data.name;
-      cell2.innerHTML = data.email;
-      cell3.innerHTML = data.password;
-      cell4.innerHTML = data.dob;
+      // Clear form fields
+      document.getElementById('registrationForm').reset();
     }
   </script>
 
 </body>
 </html>
-
 
